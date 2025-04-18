@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Serviço da aplicação Next.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=construcao_civil
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=sua_chave_secreta_aqui
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - app-network
+
+  # Serviço do banco de dados MySQL
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=construcao_civil
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/2-seed.sql
+      - ./backups:/backups
+    restart: always
+    networks:
+      - app-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Serviço para backup automático do banco de dados
+  backup:
+    image: mysql:8.0
+    volumes:
+      - ./backups:/backups
+      - ./scripts:/scripts
+    environment:
+      - MYSQL_PWD=password
+    entrypoint: /scripts/backup.sh
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
