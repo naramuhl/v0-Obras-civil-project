@@ -14,8 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 // Tipo para usuários
@@ -53,32 +51,18 @@ const mockUsers: User[] = [
 ]
 
 export default function UsuariosPage() {
-  const { data: session } = useSession()
-  const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
 
-  // Verificar se o usuário tem permissão de administrador
+  // Carregar usuários de exemplo para testes
   useEffect(() => {
-    if (session?.user?.role !== "admin") {
-      router.push("/")
-    } else {
-      // Em produção, aqui você faria uma chamada à API
-      setUsers(mockUsers)
-    }
-  }, [session, router])
+    setUsers(mockUsers)
+  }, [])
 
   // Tradução dos papéis
   const roleTranslation = {
     admin: "Administrador",
     manager: "Gerente",
     user: "Usuário",
-  }
-
-  // Cores dos badges
-  const roleBadgeVariant = {
-    admin: "default",
-    manager: "secondary",
-    user: "outline",
   }
 
   return (

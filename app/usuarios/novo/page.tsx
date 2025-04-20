@@ -12,8 +12,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useSession } from "next-auth/react"
-import { useEffect } from "react"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,16 +30,8 @@ const formSchema = z.object({
 
 export default function NovoUsuarioPage() {
   const router = useRouter()
-  const { data: session } = useSession()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-
-  // Verificar se o usuário tem permissão de administrador
-  useEffect(() => {
-    if (session?.user?.role !== "admin") {
-      router.push("/")
-    }
-  }, [session, router])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,26 +48,17 @@ export default function NovoUsuarioPage() {
     setError(null)
 
     try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
+      // Simulação de criação de usuário para testes
+      console.log("Criando usuário:", values)
 
-      const data = await response.json()
+      // Simular um atraso para mostrar o estado de carregamento
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      if (!response.ok) {
-        setError(data.error || "Erro ao criar usuário")
-        setIsLoading(false)
-        return
-      }
-
+      // Redirecionar após "criação" bem-sucedida
       router.push("/usuarios")
-      router.refresh()
     } catch (error) {
       setError("Ocorreu um erro ao criar o usuário. Tente novamente.")
+    } finally {
       setIsLoading(false)
     }
   }
