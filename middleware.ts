@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
+// import { getToken } from "next-auth/jwt" - Comentado para desativar autenticação
 
 export async function middleware(request: NextRequest) {
+  // Autenticação desativada para testes
+  // Simplesmente permite todas as requisições sem verificação
+  return NextResponse.next()
+
+  /* Código original comentado
   const { pathname } = request.nextUrl
 
   // Verifica se o usuário está tentando acessar uma página protegida
@@ -24,6 +29,7 @@ export async function middleware(request: NextRequest) {
   }
 
   return NextResponse.next()
+  */
 }
 
 // Configuração para que o middleware seja executado em todas as rotas

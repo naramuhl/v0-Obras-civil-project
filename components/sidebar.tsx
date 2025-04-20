@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { signOut } from "next-auth/react"
+// import { signOut } from "next-auth/react" - Comentado para desativar autenticação
 import {
   BarChart3,
   Briefcase,
@@ -21,7 +21,7 @@ import {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react" - Comentado para desativar autenticação
 
 const routes = [
   {
@@ -82,7 +82,13 @@ const routes = [
 
 export function Sidebar() {
   const pathname = usePathname()
-  const { data: session } = useSession()
+  // const { data: session } = useSession() - Comentado para desativar autenticação
+
+  // Usuário simulado para testes
+  const mockUser = {
+    name: "Usuário de Teste",
+    email: "teste@construcao.com",
+  }
 
   return (
     <Sheet>
@@ -120,23 +126,24 @@ export function Sidebar() {
             </nav>
           </div>
           <div className="mt-auto border-t p-2">
-            {session?.user && (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 px-3 py-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">{session.user.name || session.user.email}</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => signOut({ callbackUrl: "/login" })}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sair
-                </Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 px-3 py-2">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">{mockUser.name || mockUser.email}</span>
               </div>
-            )}
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => {
+                  // Simulação de logout - apenas redireciona para a página inicial
+                  window.location.href = "/"
+                }}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Sair
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -145,7 +152,13 @@ export function Sidebar() {
 }
 
 function MobileNav({ pathname }: { pathname: string }) {
-  const { data: session } = useSession()
+  // const { data: session } = useSession() - Comentado para desativar autenticação
+
+  // Usuário simulado para testes
+  const mockUser = {
+    name: "Usuário de Teste",
+    email: "teste@construcao.com",
+  }
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -176,23 +189,24 @@ function MobileNav({ pathname }: { pathname: string }) {
         ))}
       </nav>
       <div className="mt-auto border-t p-4">
-        {session?.user && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 px-3 py-2">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{session.user.name || session.user.email}</span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-              onClick={() => signOut({ callbackUrl: "/login" })}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sair
-            </Button>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 px-3 py-2">
+            <User className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">{mockUser.name || mockUser.email}</span>
           </div>
-        )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => {
+              // Simulação de logout - apenas redireciona para a página inicial
+              window.location.href = "/"
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sair
+          </Button>
+        </div>
       </div>
     </div>
   )
